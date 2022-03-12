@@ -18,7 +18,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
-  static final _dbName = "puttingDatabase.db";
+  static final _dbName = "physicalDeviceDatabase.db";
   static final _dbVersion = 1;
   static final _tableName = "myTable";
 

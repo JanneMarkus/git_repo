@@ -472,27 +472,27 @@ class _CounterState extends State<Counter> {
               });
               print('the inserted id is $i');
             }),
-        ElevatedButton(
-            child: const Text(
-              "Query Database",
-              textScaleFactor: 2,
-            ),
-            style: null,
-            onPressed: () async {
-              List<Map<String, dynamic>> queryRows =
-                  await DataBaseHelper.instance.queryAll();
-              print(queryRows);
-            }),
-        ElevatedButton(
-            child: const Text(
-              "ListView Builder",
-              textScaleFactor: 2,
-            ),
-            style: null,
-            onPressed: () {
-              ListViewButtons();
-              print('The listview should be showing now');
-            })
+        // ElevatedButton(
+        //     child: const Text(
+        //       "Query Database",
+        //       textScaleFactor: 2,
+        //     ),
+        //     style: null,
+        //     onPressed: () async {
+        //       List<Map<String, dynamic>> queryRows =
+        //           await DataBaseHelper.instance.queryAll();
+        //       print(queryRows);
+        //     }),
+        // ElevatedButton(
+        //     child: const Text(
+        //       "ListView Builder",
+        //       textScaleFactor: 2,
+        //     ),
+        //     style: null,
+        //     onPressed: () {
+        //       ListViewButtons();
+        //       print('The listview should be showing now');
+        //     })
       ])
     ]);
   }
