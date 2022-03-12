@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: _title,
-        home: MyStatelessWidget(storage: DataStorage()),
+        home: MainAppWidget(storage: DataStorage()),
         theme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Colors.green,
@@ -76,8 +76,8 @@ class MyApp extends StatelessWidget {
 // Add features to the app by putting them in the scaffold
 //
 
-class MyStatelessWidget extends StatelessWidget {
-  const MyStatelessWidget({Key? key, required this.storage}) : super(key: key);
+class MainAppWidget extends StatelessWidget {
+  const MainAppWidget({Key? key, required this.storage}) : super(key: key);
 
   final DataStorage storage;
 
@@ -85,7 +85,7 @@ class MyStatelessWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: global.startTab,
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 0,
@@ -97,6 +97,9 @@ class MyStatelessWidget extends StatelessWidget {
               Tab(
                 icon: Text('Putt'),
               ),
+              Tab(
+                icon: Icon(Icons.add),
+              )
             ],
           ),
         ),
@@ -110,6 +113,9 @@ class MyStatelessWidget extends StatelessWidget {
             Center(
               // This is where the putting game code class will be called from
               child: PuttingCounter(),
+            ),
+            Center(
+              child: ShotsMade(),
             ),
           ],
         ),
@@ -382,6 +388,24 @@ class DistanceSlidersState extends State<DistanceSliders>
 //
 // This is where the putting counter code goes
 //
+
+class ShotsMade extends StatefulWidget {
+  const ShotsMade({Key? key}) : super(key: key);
+
+  @override
+  State<ShotsMade> createState() => _ShotsMadeState();
+}
+
+class _ShotsMadeState extends State<ShotsMade> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text("This is the ShotsMade Widget \n"
+          "This is where I'll add the listview widget \n"
+          "that allows the user to select how many shots they made"),
+    );
+  }
+}
 
 class PuttingCounter extends StatelessWidget {
   const PuttingCounter({Key? key}) : super(key: key);
