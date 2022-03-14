@@ -43,6 +43,8 @@ class CheckItemWidget extends StatefulWidget {
 class _CheckItemWidgetState extends State<CheckItemWidget> {
   bool _isChecked = false;
   bool _hasPassed = false;
+
+  get index => index;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,7 +52,7 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
         child: Row(
           children: [
             const Flexible(
-              child: Text("Placeholder text for where a checkItem would go"),
+              child: Text('Placeholder text'),
             ),
             IconButton(
                 onPressed: () {
