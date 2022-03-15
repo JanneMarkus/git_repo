@@ -12,12 +12,6 @@ void main() {
   runApp(const ChecklistApp());
 }
 
-List checkItems = [
-  'Check antenna',
-  'check bolts',
-  'props are clean and free of damage'
-];
-
 class ChecklistApp extends StatelessWidget {
   const ChecklistApp({Key? key}) : super(key: key);
 
@@ -29,13 +23,14 @@ class ChecklistApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Checklist(),
+      home: Checklist(),
     );
   }
 }
 
 class CheckItemWidget extends StatefulWidget {
-  const CheckItemWidget({Key? key}) : super(key: key);
+  const CheckItemWidget({Key? key, required this.text}) : super(key: key);
+  final text;
   @override
   State<CheckItemWidget> createState() => _CheckItemWidgetState();
 }
@@ -44,15 +39,14 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
   bool _isChecked = false;
   bool _hasPassed = false;
 
-  get index => index;
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Row(
           children: [
-            const Flexible(
-              child: Text('Placeholder text'),
+            Flexible(
+              child: Text('${widget.text}'),
             ),
             IconButton(
                 onPressed: () {
@@ -77,7 +71,13 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
 }
 
 class Checklist extends StatefulWidget {
-  const Checklist({Key? key}) : super(key: key);
+  List checkItems = [
+    'Check antenna',
+    'check bolts',
+    'props are clean and free of damage',
+    'check connectors'
+  ];
+  Checklist({Key? key}) : super(key: key);
   @override
   State<Checklist> createState() => _ChecklistState();
 }
@@ -88,9 +88,12 @@ class _ChecklistState extends State<Checklist> {
     return Scaffold(
       appBar: AppBar(title: Text('Pre-flight Physical Checklist')),
       body: ListView.builder(
-        itemBuilder: (_, int index) => const CheckItemWidget(),
-        itemCount: checkItems.length,
+        itemBuilder: (context, int index) =>
+            CheckItemWidget(text: widget.checkItems[index]),
+        itemCount: widget.checkItems.length,
       ),
     );
   }
 }
+
+// this video has the answers to what you want to do https://www.youtube.com/watch?v=l3KnuUmlr-w
