@@ -72,10 +72,27 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
 
 class Checklist extends StatefulWidget {
   List checkItems = [
-    'Check antenna',
-    'check bolts',
-    'props are clean and free of damage',
-    'check connectors'
+    '900 MHz telemetry antenna (front)',
+    'Cellular antenna (rear)',
+    'Jump start cable is plugged in for charging avionics battery',
+    'Ensure that all bolts are secure',
+    'Check for any loose, disconnected, or damaged components',
+    'Check all connectors on battery back plane for cracks or bent terminals',
+    'Check all wiring to ensure proper connections (Do not pull on any wires)',
+    'Both front and rear landing gear are not twisted',
+    'The landing gear is properly secured to the airframe',
+    'Visually inspect landing gear for any cracks',
+    'Overall inspection for any damaged components',
+    'All propellers are undamaged and clean',
+    'The T-Motor logo is always facing up',
+    'All propellers are 22x6.6 (Sparrow) or 28x9.2 (Robin)',
+    'All propellers are correct as shown in Figure 1',
+    'All properller bolt alignment marks have not moved',
+    'All motor arms(A-D) are plugged into the correct connector as shown in Figure 1',
+    'All boom LED strips and wires are secure',
+    'All 8 arm wingnuts are tightly secured with the longer screws at the top and the shorter screws at the bottom',
+    'Cowling/Landing Gear',
+    'Open payload door and visuall yinspect that the payload drop doors are closed and leveled.'
   ];
   Checklist({Key? key}) : super(key: key);
   @override
