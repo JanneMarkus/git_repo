@@ -1,10 +1,16 @@
-// I need to make a listview that makes a list item for each question in a list of checklist items
-// Make a list of checklist items
-// Make a listview widget with a listview builder
-// Make a list item widget that includes the checkbox for each item
-// Add a toggle switch to each item.
-// I need to have a checkbox nested in each list item that I can use to select when I've checked that Item
-// I want to have a switch on each tile that allows me to toggle between fail and pass
+// Add grouping feature to the checklist items.
+// Add number to each item. The number begins at 1 for the first item in a group
+// Each group has a Title and a description.
+// I can make a list of 10 items where each item is a group. Then each group item contains a list of the check that are in that group.
+// Then I can display the groups as a list view, and in each item of the list view I can have the group number as the leading, the title, the description.
+// I would display the group title and such on the init of the group, then I would return the list tiles on all remaining runs.
+
+// I could also add metadata to each item in the checklist which tells which group it's in and which item it is.
+// Then I just do separate listView widgets for each group.
+
+// Add feature that opens the camera on selfie mode when you press the icon on the prop bolts checklist item.
+// I could pass a "Special feature" field for each list item. The item that needs the camera to open could have the function for that, and the items that are followed by a different group could have the group header constructor passed in.
+// fields with no special features just pass null.
 
 import 'package:flutter/material.dart';
 
@@ -41,32 +47,67 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Row(
-          children: [
-            Flexible(
-              child: Text('${widget.text}'),
-            ),
-            IconButton(
-                onPressed: () {
-                  _isChecked == false ? _isChecked = true : _isChecked = false;
-                  setState(() {});
-                },
-                icon: _isChecked == false
-                    ? const Icon(Icons.check_box_outline_blank)
-                    : const Icon(Icons.check_box)),
-            Switch(
-                value: _hasPassed == false ? false : true,
-                onChanged: (bool newValue) {
-                  setState(() {
-                    _hasPassed == false
-                        ? _hasPassed = true
-                        : _hasPassed = false;
-                  });
-                })
-          ],
-        ));
+    if (widget.text == 'All propeller bolt alignment marks have not moved') {
+      return ListTile(
+          title: Text('${widget.text}'),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Tooltip(
+                  message: 'Open front-facing camera',
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.camera_alt),
+                  )),
+              IconButton(
+                  onPressed: () {
+                    _isChecked == false
+                        ? _isChecked = true
+                        : _isChecked = false;
+                    setState(() {});
+                  },
+                  icon: _isChecked == false
+                      ? const Icon(Icons.check_box_outline_blank)
+                      : const Icon(Icons.check_box)),
+              Switch(
+                  value: _hasPassed == false ? false : true,
+                  onChanged: (bool newValue) {
+                    setState(() {
+                      _hasPassed == false
+                          ? _hasPassed = true
+                          : _hasPassed = false;
+                    });
+                  })
+            ],
+          ));
+    } else {
+      return ListTile(
+          title: Text('${widget.text}'),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    _isChecked == false
+                        ? _isChecked = true
+                        : _isChecked = false;
+                    setState(() {});
+                  },
+                  icon: _isChecked == false
+                      ? const Icon(Icons.check_box_outline_blank)
+                      : const Icon(Icons.check_box)),
+              Switch(
+                  value: _hasPassed == false ? false : true,
+                  onChanged: (bool newValue) {
+                    setState(() {
+                      _hasPassed == false
+                          ? _hasPassed = true
+                          : _hasPassed = false;
+                    });
+                  })
+            ],
+          ));
+    }
   }
 }
 
@@ -87,12 +128,47 @@ class Checklist extends StatefulWidget {
     'The T-Motor logo is always facing up',
     'All propellers are 22x6.6 (Sparrow) or 28x9.2 (Robin)',
     'All propellers are correct as shown in Figure 1',
-    'All properller bolt alignment marks have not moved',
+    'All propeller bolt alignment marks have not moved',
     'All motor arms(A-D) are plugged into the correct connector as shown in Figure 1',
     'All boom LED strips and wires are secure',
     'All 8 arm wingnuts are tightly secured with the longer screws at the top and the shorter screws at the bottom',
     'Cowling/Landing Gear',
-    'Open payload door and visuall yinspect that the payload drop doors are closed and leveled.'
+    'Open payload door and visually inspect that the payload drop doors are closed and leveled.'
+  ];
+
+  List checkGroups = [
+    {
+      'title': 'Antenna',
+      'Description':
+          'Ensure all power is disconnected from the RPA and check the following:'
+    },
+    {'title': 'Battery', 'Description': 'Ensure avionics batter is connected:'},
+    {
+      'title': 'Airframe',
+      'Description': 'Examine entire airframe and cowling:'
+    },
+    {
+      'title': 'Landing Gear',
+      'Description': 'Examine the landing gear and verify:'
+    },
+    {
+      'title': 'Propellers',
+      'Description': 'Examine the propellers and verify that:'
+    },
+    {
+      'title': 'Motor Arm Connector + interior Check',
+      'Description':
+          '*Only perform if Motor Arms need to be assembled (Do not remove Motor arms or Top Cowling to perform check)\nInspect the Motor Arm Connectors + Interior and verify that:'
+    },
+    {
+      'title': 'Motor Arm',
+      'Description': 'Plug in all 4 motor arms then verify:'
+    },
+    {'title': 'Wipe-Down', 'Description': 'Cleaning:'},
+    {
+      'title': 'Payload Drop',
+      'Description': 'Perform if RPA features a payload drop mechanism:'
+    }
   ];
   Checklist({Key? key}) : super(key: key);
   @override
