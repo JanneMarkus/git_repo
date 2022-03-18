@@ -1,3 +1,10 @@
+// make each tile have a different color ranging from a cooler looking color to a hotter looking color depending on the accuracy percentage.
+// So i want each list item to have a color that ranges from grey to the max vibrance of red
+// I can take the number of the stack size, divid it by 255, and then multiply that by the index number.
+// index divided by stack size times range of the color.
+// Make the text for each number nice and large
+// make the view automatically start at the top of the list rather than the bottom.
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'global.dart' as global;
@@ -86,7 +93,7 @@ class MainAppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: global.startTab,
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 0,
@@ -98,9 +105,6 @@ class MainAppWidget extends StatelessWidget {
               Tab(
                 icon: Text('Putt'),
               ),
-              Tab(
-                icon: Icon(Icons.add),
-              )
             ],
           ),
         ),
@@ -114,9 +118,6 @@ class MainAppWidget extends StatelessWidget {
             Center(
               // This is where the putting game code class will be called from
               child: PuttingCounter(),
-            ),
-            Center(
-              child: ShotsMade(),
             ),
           ],
         ),
@@ -392,7 +393,6 @@ class DistanceSlidersState extends State<DistanceSliders>
 
 class ShotsMade extends StatefulWidget {
   const ShotsMade({Key? key}) : super(key: key);
-
   @override
   State<ShotsMade> createState() => _ShotsMadeState();
 }
@@ -400,9 +400,33 @@ class ShotsMade extends StatefulWidget {
 class _ShotsMadeState extends State<ShotsMade> {
   @override
   Widget build(BuildContext context) {
-    return const Text("This is the ShotsMade Widget \n"
-        "This is where I'll add the listview widget \n"
-        "that allows the user to select how many shots they made");
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: SafeArea(
+        top: true,
+        child: ListView.builder(
+            reverse: true,
+            itemBuilder: (context, int index) => SizedBox(
+                height: (height) / 6,
+                child: GestureDetector(
+                  onTap: () => {
+                    global.makes = global.makes + index,
+                    print(global.makes),
+                    Navigator.pop(context)
+                  },
+                  child: Container(
+                    color: Color.fromARGB(
+                        (255 / global.stackSize * index).ceil(), 200, 0, 0),
+                    child: Center(
+                        child: Text(
+                      (index).toString(),
+                      textScaleFactor: 5,
+                    )),
+                  ),
+                )),
+            itemCount: global.stackSize + 1),
+      ),
+    );
   }
 }
 
@@ -423,6 +447,7 @@ class Counter extends StatefulWidget {
 
 class _CounterState extends State<Counter> {
   var count = global.count;
+  var makes = global.makes;
   var stackSize = global.stackSize;
   @override
   Widget build(BuildContext context) {
@@ -452,6 +477,10 @@ class _CounterState extends State<Counter> {
                       color: global.backgroundColor))),
           GestureDetector(
               onTap: () => setState(() {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ShotsMade()));
                     count = count + stackSize;
                     global.count = count;
                     if (count >= global.goal) {
@@ -485,6 +514,7 @@ class _CounterState extends State<Counter> {
                 ? null
                 : () async {
                     final currentCount = count;
+                    final currentMakes = global.makes;
                     int? i = await DataBaseHelper.instance.insert({
                       DataBaseHelper.columnName: global.name,
                       DataBaseHelper.columnDate: DateTime.now().toString(),
@@ -494,19 +524,31 @@ class _CounterState extends State<Counter> {
                       DataBaseHelper.columnDistance: global.distance,
                       DataBaseHelper.columnStackSize: global.stackSize
                     });
+
+                    // inputs
+                    //  makes selector
+                    //    add the index to the global.makes
+                    //  log session
+                    //    take global.makes and add it to the database
+                    //    reset global.makes to 0
+                    //  delete
+                    //    put global.makes back to the value it was at before adding to database
+
                     setState(() {
+                      global.makes = 0;
                       count = 0;
                       global.backgroundColor = Colors.transparent;
                     });
                     final snackBar = SnackBar(
                         content: Text(
-                            "Logged session $i to database:\n\n${global.count.toString()} ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance.toString()} feet."),
+                            "Logged session $i to database:\n\nYou made $currentMakes of ${global.count.toString()} ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance.toString()} feet."),
                         action: SnackBarAction(
                           label: 'Undo',
                           onPressed: () async {
                             await DataBaseHelper.instance.delete(i);
                             setState(() {
                               count = currentCount;
+                              global.makes = currentMakes;
                               if (count >= global.goal) {
                                 global.backgroundColor = global.green;
                               } else {
