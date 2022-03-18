@@ -400,11 +400,9 @@ class ShotsMade extends StatefulWidget {
 class _ShotsMadeState extends State<ShotsMade> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("This is the ShotsMade Widget \n"
-          "This is where I'll add the listview widget \n"
-          "that allows the user to select how many shots they made"),
-    );
+    return const Text("This is the ShotsMade Widget \n"
+        "This is where I'll add the listview widget \n"
+        "that allows the user to select how many shots they made");
   }
 }
 
