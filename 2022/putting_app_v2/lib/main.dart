@@ -403,11 +403,11 @@ class _ShotsMadeState extends State<ShotsMade> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
-        top: true,
+        top: false,
         child: ListView.builder(
             reverse: true,
             itemBuilder: (context, int index) => SizedBox(
-                height: (height) / 6,
+                height: (height) / 7,
                 child: GestureDetector(
                   onTap: () => {
                     global.makes = global.makes + index,
@@ -445,6 +445,13 @@ class Counter extends StatefulWidget {
   _CounterState createState() => _CounterState();
 }
 
+class CustomPageRoute extends MaterialPageRoute {
+  CustomPageRoute({builder}) : super(builder: builder);
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 0);
+}
+
 class _CounterState extends State<Counter> {
   var count = global.count;
   var makes = global.makes;
@@ -479,7 +486,7 @@ class _CounterState extends State<Counter> {
               onTap: () => setState(() {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CustomPageRoute(
                             builder: (context) => const ShotsMade()));
                     count = count + stackSize;
                     global.count = count;
