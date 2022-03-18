@@ -12,15 +12,15 @@
 // I could pass a "Special feature" field for each list item. The item that needs the camera to open could have the function for that, and the items that are followed by a different group could have the group header constructor passed in.
 // fields with no special features just pass null.
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 
-void main() {
+main() {
   runApp(const ChecklistApp());
 }
 
 class ChecklistApp extends StatelessWidget {
   const ChecklistApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class ChecklistApp extends StatelessWidget {
 
 class CheckItemWidget extends StatefulWidget {
   const CheckItemWidget({Key? key, required this.text}) : super(key: key);
-  final text;
+  final String text;
   @override
   State<CheckItemWidget> createState() => _CheckItemWidgetState();
 }
@@ -49,15 +49,15 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
   Widget build(BuildContext context) {
     if (widget.text == 'All propeller bolt alignment marks have not moved') {
       return ListTile(
-          title: Text('${widget.text}'),
+          title: Text(widget.text),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Tooltip(
                   message: 'Open front-facing camera',
                   child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.camera_alt),
+                    onPressed: () => {},
+                    icon: const Icon(Icons.camera_alt),
                   )),
               IconButton(
                   onPressed: () {
@@ -82,7 +82,7 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
           ));
     } else {
       return ListTile(
-          title: Text('${widget.text}'),
+          title: Text(widget.text),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -179,7 +179,7 @@ class _ChecklistState extends State<Checklist> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pre-flight Physical Checklist')),
+      appBar: AppBar(title: const Text('Pre-flight Physical Checklist')),
       body: ListView.builder(
         itemBuilder: (context, int index) =>
             CheckItemWidget(text: widget.checkItems[index]),
