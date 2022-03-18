@@ -13,3 +13,6 @@ var green = const Color.fromRGBO(152, 190, 100, 1);
 var backgroundColor = Colors.transparent;
 var startTab = 1;
 var table = [];
+
+final GlobalKey<ScaffoldMessengerState> snackbarKey =
+    GlobalKey<ScaffoldMessengerState>();

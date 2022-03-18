@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: _title,
+        scaffoldMessengerKey: global.snackbarKey,
         home: MainAppWidget(storage: DataStorage()),
         theme: ThemeData(
           brightness: Brightness.dark,
@@ -482,18 +483,47 @@ class _CounterState extends State<Counter> {
               textScaleFactor: 2,
             ),
             style: null,
-            onPressed: () async {
-              int? i = await DataBaseHelper.instance.insert({
-                DataBaseHelper.columnName: global.name,
-                DataBaseHelper.columnDate: DateTime.now().toString(),
-                DataBaseHelper.columnThrows: global.count,
-                DataBaseHelper.columnMakes: global.makes,
-                DataBaseHelper.columnShotType: global.shotType,
-                DataBaseHelper.columnDistance: global.distance,
-                DataBaseHelper.columnStackSize: global.stackSize
-              });
-              print('the inserted id is $i');
-            }),
+            onPressed: count == 0
+                ? null
+                : () async {
+                    final currentCount = count;
+                    int? i = await DataBaseHelper.instance.insert({
+                      DataBaseHelper.columnName: global.name,
+                      DataBaseHelper.columnDate: DateTime.now().toString(),
+                      DataBaseHelper.columnThrows: global.count,
+                      DataBaseHelper.columnMakes: global.makes,
+                      DataBaseHelper.columnShotType: global.shotType,
+                      DataBaseHelper.columnDistance: global.distance,
+                      DataBaseHelper.columnStackSize: global.stackSize
+                    });
+                    setState(() {
+                      count = 0;
+                      global.backgroundColor = Colors.transparent;
+                    });
+                    final snackBar = SnackBar(
+                        content: Text(
+                            "Logged session $i to database:\n\n${global.count.toString()} ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance.toString()} feet."),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () async {
+                            await DataBaseHelper.instance.delete(i);
+                            setState(() {
+                              count = currentCount;
+                              if (count >= global.goal) {
+                                global.backgroundColor = global.green;
+                              } else {
+                                global.backgroundColor = Colors.transparent;
+                              }
+                            });
+                            final deleteSnackBar = SnackBar(
+                              content: Text("Deleted session $i"),
+                            );
+                            global.snackbarKey.currentState
+                                ?.showSnackBar(deleteSnackBar);
+                          },
+                        ));
+                    global.snackbarKey.currentState?.showSnackBar(snackBar);
+                  }),
         // ElevatedButton(
         //     child: const Text(
         //       "Query Database",
@@ -517,27 +547,5 @@ class _CounterState extends State<Counter> {
         //     })
       ])
     ]);
-  }
-}
-
-class ListViewButtons extends StatelessWidget {
-  final List<String> entries = <String>['A', 'B', 'C'];
-  final List<int> colorCodes = <int>[600, 500, 100];
-
-  ListViewButtons({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: entries.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 50,
-                color: Colors.amber[colorCodes[index]],
-                child: Center(child: Text('Entry ${entries[index]}')),
-              );
-            }));
   }
 }
