@@ -218,8 +218,8 @@ class StackSizeSlidersState extends State<StackSizeSliders>
                           newValue != _continuousValue.value) {
                         setState(() {
                           _continuousValue.value =
-                              newValue.truncate().clamp(0, 20);
-                          global.stackSize = newValue.clamp(0, 20);
+                              newValue.clamp(0, 20).truncate();
+                          global.stackSize = newValue.clamp(0, 20).toInt();
                         });
                       }
                     },
@@ -299,7 +299,7 @@ class DistanceSlidersState extends State<DistanceSliders>
                           newValue != _continuousValue.value) {
                         setState(() {
                           _continuousValue.value =
-                              newValue.clamp(0, 100) as int;
+                              newValue.clamp(0, 100).truncate();
                           global.distance = newValue.clamp(0, 100).toInt();
                         });
                       }
@@ -409,7 +409,7 @@ class _CounterState extends State<Counter> {
               onLongPress: () {
                 final makesSnackBar = SnackBar(
                     content: Text(
-                        "${global.makes}/$count - Accuracy: ${(global.makes / count) * 100.round()}%"));
+                        "${global.makes}/$count - Accuracy: ${((global.makes / count) * 100).truncate()}%"));
                 global.snackbarKey.currentState?.showSnackBar(makesSnackBar);
               },
               onTap: () => setState(() {
