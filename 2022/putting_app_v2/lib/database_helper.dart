@@ -18,20 +18,18 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
-  static final _dbName = "physicalDeviceDatabase.db";
-  static final _dbVersion = 1;
-  static final _tableName = "myTable";
+  static const _dbName = "physicalDeviceDatabase.db";
+  static const _dbVersion = 1;
+  static const _tableName = "myTable";
 
-  static final columnId = "_id";
-  static final columnName = "name";
-  // If everything goes to crap erase the code below here
-  static final columnDate = "date";
-  static final columnShotType = "shotType";
-  static final columnDistance = "distance";
-  static final columnThrows = 'throws';
-  static final columnMakes = 'makes';
-  static final columnStackSize = 'stackSize';
-  // If everything goes to crap erase the code above here
+  static const columnId = "_id";
+  static const columnName = "name";
+  static const columnDate = "date";
+  static const columnShotType = "shotType";
+  static const columnDistance = "distance";
+  static const columnThrows = 'throws';
+  static const columnMakes = 'makes';
+  static const columnStackSize = 'stackSize';
 
   // Making it a singleton class
   DataBaseHelper._privateConstructor();

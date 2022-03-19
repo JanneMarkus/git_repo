@@ -1,5 +1,3 @@
-// Fix the sliders so that they'll only let you select whole integers
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'global.dart' as global;
@@ -494,7 +492,7 @@ class _CounterState extends State<Counter> {
                     });
                     final snackBar = SnackBar(
                         content: Text(
-                            "Logged session $i to database:\n\nYou made $currentMakes of ${global.count.toString()} ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance.toString()} feet."),
+                            "Logged session $i to database:\n\nYou made $currentMakes of ${global.count} ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance} feet."),
                         action: SnackBarAction(
                           label: 'Undo',
                           onPressed: () async {
