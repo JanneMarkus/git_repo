@@ -1,3 +1,5 @@
+// Fix the sliders so that they'll only let you select whole integers
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'global.dart' as global;
@@ -5,53 +7,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'database_helper.dart';
 
-// the rgb for the green I want (152,190,100)
-
 void main() async {
   runApp(const MyApp());
-}
-
-//
-// This is the code for writing to a txt file
-//
-// create the class that handles reading and writing to a local text file.
-class DataStorage {
-  // create a function that returns the path to where the file will be stored.
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    // return the path
-    return directory.path;
-  }
-
-  // create a funtion that returns the path to the exact file.
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/puttingData.txt');
-  }
-
-  // create a function that reads the data. If the data cannot be read, return 0.
-  Future<int> readData() async {
-    // try to open and return the contents of the file
-    try {
-      final file = await _localFile;
-
-      final contents = await file.readAsString();
-
-      return int.parse(contents);
-      // if the file cannot be read or parsed, return 0
-    } catch (e) {
-      return 0;
-    }
-  }
-
-  // create a function that writes to the file
-  // when calling the function, the user passes the integer they want to write.
-  Future<File> writeData(int data) async {
-    // wait for the file to open
-    final file = await _localFile;
-    // writes the passed in data as a string to the text document.
-    return file.writeAsString('$data');
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -64,23 +21,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: _title,
         scaffoldMessengerKey: global.snackbarKey,
-        home: MainAppWidget(storage: DataStorage()),
+        home: const MainAppWidget(),
         theme: ThemeData(
           brightness: Brightness.dark,
-          primaryColor: Colors.green,
+          primaryColor: Colors.blue,
+          primarySwatch: Colors.pink,
         ));
   }
 }
 
-//
-// This is where I set the main structure of the app.
-// Add features to the app by putting them in the scaffold
-//
-
 class MainAppWidget extends StatelessWidget {
-  const MainAppWidget({Key? key, required this.storage}) : super(key: key);
-
-  final DataStorage storage;
+  const MainAppWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +108,7 @@ class _ChoiceChip extends StatefulWidget {
 }
 
 class _ChoiceChipState extends State<_ChoiceChip> with RestorationMixin {
-  final RestorableIntN _indexSelected = RestorableIntN(global.shotType);
+  final RestorableInt _indexSelected = RestorableInt(global.shotType);
 
   @override
   String get restorationId => 'choice_chip_demo';
@@ -229,8 +180,7 @@ class StackSizeSliders extends StatefulWidget {
 
 class StackSizeSlidersState extends State<StackSizeSliders>
     with RestorationMixin {
-  final RestorableDouble _continuousValue =
-      RestorableDouble(global.stackSize.toDouble());
+  final RestorableInt _continuousValue = RestorableInt(global.stackSize);
 
   @override
   String get restorationId => 'stackSize_slider';
@@ -263,12 +213,13 @@ class StackSizeSlidersState extends State<StackSizeSliders>
                   child: TextField(
                     textAlign: TextAlign.center,
                     onSubmitted: (value) {
-                      final newValue = double.tryParse(value);
+                      final newValue = int.tryParse(value);
                       if (newValue != null &&
                           newValue != _continuousValue.value) {
                         setState(() {
-                          _continuousValue.value = newValue.clamp(0, 20);
-                          global.stackSize = newValue.clamp(0, 20).toInt();
+                          _continuousValue.value =
+                              newValue.truncate().clamp(0, 20);
+                          global.stackSize = newValue.clamp(0, 20);
                         });
                       }
                     },
@@ -280,13 +231,13 @@ class StackSizeSlidersState extends State<StackSizeSliders>
                 ),
               ),
               Slider(
-                value: _continuousValue.value,
+                value: _continuousValue.value.toDouble(),
                 min: 0,
                 max: 20,
                 onChanged: (value) {
                   setState(() {
-                    _continuousValue.value = value;
-                    global.stackSize = value.toDouble().toInt();
+                    _continuousValue.value = value.toInt();
+                    global.stackSize = value.toInt();
                   });
                 },
               ),
@@ -310,8 +261,7 @@ class DistanceSliders extends StatefulWidget {
 
 class DistanceSlidersState extends State<DistanceSliders>
     with RestorationMixin {
-  final RestorableDouble _continuousValue =
-      RestorableDouble(global.distance.toDouble());
+  final RestorableInt _continuousValue = RestorableInt(global.distance);
 
   @override
   String get restorationId => 'distance_slider';
@@ -349,7 +299,7 @@ class DistanceSlidersState extends State<DistanceSliders>
                           newValue != _continuousValue.value) {
                         setState(() {
                           _continuousValue.value =
-                              newValue.clamp(0, 100) as double;
+                              newValue.clamp(0, 100) as int;
                           global.distance = newValue.clamp(0, 100).toInt();
                         });
                       }
@@ -362,13 +312,13 @@ class DistanceSlidersState extends State<DistanceSliders>
                 ),
               ),
               Slider(
-                value: _continuousValue.value,
+                value: _continuousValue.value.toDouble(),
                 min: 0,
                 max: 100,
                 onChanged: (value) {
                   setState(() {
-                    _continuousValue.value = value;
-                    global.distance = value.toDouble().toInt();
+                    _continuousValue.value = value.toInt();
+                    global.distance = value.toInt();
                   });
                 },
               ),
@@ -391,7 +341,7 @@ class _ShotsMadeState extends State<ShotsMade> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: Text("Made putts")),
+      appBar: AppBar(title: const Text("Made putts")),
       body: SafeArea(
         top: false,
         child: ListView.builder(
