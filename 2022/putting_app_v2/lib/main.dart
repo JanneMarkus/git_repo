@@ -1,6 +1,3 @@
-// add a second smaller text number under the main counter that shows the makes
-// and then under that, show the accuracy.
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'global.dart' as global;
@@ -485,6 +482,12 @@ class _CounterState extends State<Counter> {
                       width: (MediaQuery.of(context).size.width / 2),
                       color: global.backgroundColor))),
           GestureDetector(
+              onLongPress: () {
+                final makesSnackBar = SnackBar(
+                    content: Text(
+                        "${global.makes}/$count - Accuracy: ${(global.makes / count) * 100.round()}%"));
+                global.snackbarKey.currentState?.showSnackBar(makesSnackBar);
+              },
               onTap: () => setState(() {
                     Navigator.push(
                         context,
