@@ -1,9 +1,5 @@
-// make each tile have a different color ranging from a cooler looking color to a hotter looking color depending on the accuracy percentage.
-// So i want each list item to have a color that ranges from grey to the max vibrance of red
-// I can take the number of the stack size, divid it by 255, and then multiply that by the index number.
-// index divided by stack size times range of the color.
-// Make the text for each number nice and large
-// make the view automatically start at the top of the list rather than the bottom.
+// add a second smaller text number under the main counter that shows the makes
+// and then under that, show the accuracy.
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -387,10 +383,6 @@ class DistanceSlidersState extends State<DistanceSliders>
   }
 }
 
-//
-// This is where the putting counter code goes
-//
-
 class ShotsMade extends StatefulWidget {
   const ShotsMade({Key? key}) : super(key: key);
   @override
@@ -402,6 +394,7 @@ class _ShotsMadeState extends State<ShotsMade> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(title: Text("Made putts")),
       body: SafeArea(
         top: false,
         child: ListView.builder(
@@ -430,6 +423,9 @@ class _ShotsMadeState extends State<ShotsMade> {
   }
 }
 
+//
+// This is where the putting counter code goes
+//
 class PuttingCounter extends StatelessWidget {
   const PuttingCounter({Key? key}) : super(key: key);
 
@@ -439,17 +435,17 @@ class PuttingCounter extends StatelessWidget {
   }
 }
 
-class Counter extends StatefulWidget {
-  const Counter({Key? key}) : super(key: key);
-  @override
-  _CounterState createState() => _CounterState();
-}
-
 class CustomPageRoute extends MaterialPageRoute {
   CustomPageRoute({builder}) : super(builder: builder);
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 0);
+}
+
+class Counter extends StatefulWidget {
+  const Counter({Key? key}) : super(key: key);
+  @override
+  _CounterState createState() => _CounterState();
 }
 
 class _CounterState extends State<Counter> {
@@ -463,6 +459,12 @@ class _CounterState extends State<Counter> {
           builder: (BuildContext context, BoxConstraints constraints) {
         return Row(children: [
           GestureDetector(
+              onLongPress: () {
+                final makesSnackBar = SnackBar(
+                    content: Text(
+                        "${global.makes}/$count - Accuracy: ${(global.makes / count) * 100.round()}%"));
+                global.snackbarKey.currentState?.showSnackBar(makesSnackBar);
+              },
               onTap: () => setState(() {
                     if (count - stackSize <= 0) {
                       count = 0;
@@ -508,7 +510,7 @@ class _CounterState extends State<Counter> {
         Center(
             child: IgnorePointer(
                 child: Text(
-          count.toString(),
+          "$count",
           textScaleFactor: 10,
         ))),
         ElevatedButton(
@@ -531,15 +533,6 @@ class _CounterState extends State<Counter> {
                       DataBaseHelper.columnDistance: global.distance,
                       DataBaseHelper.columnStackSize: global.stackSize
                     });
-
-                    // inputs
-                    //  makes selector
-                    //    add the index to the global.makes
-                    //  log session
-                    //    take global.makes and add it to the database
-                    //    reset global.makes to 0
-                    //  delete
-                    //    put global.makes back to the value it was at before adding to database
 
                     setState(() {
                       global.makes = 0;
@@ -571,27 +564,6 @@ class _CounterState extends State<Counter> {
                         ));
                     global.snackbarKey.currentState?.showSnackBar(snackBar);
                   }),
-        // ElevatedButton(
-        //     child: const Text(
-        //       "Query Database",
-        //       textScaleFactor: 2,
-        //     ),
-        //     style: null,
-        //     onPressed: () async {
-        //       List<Map<String, dynamic>> queryRows =
-        //           await DataBaseHelper.instance.queryAll();
-        //       print(queryRows);
-        //     }),
-        // ElevatedButton(
-        //     child: const Text(
-        //       "ListView Builder",
-        //       textScaleFactor: 2,
-        //     ),
-        //     style: null,
-        //     onPressed: () {
-        //       ListViewButtons();
-        //       print('The listview should be showing now');
-        //     })
       ])
     ]);
   }
