@@ -12,6 +12,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  final accentColor = Colors.pink;
   static const String _title = 'Putting App';
 
   @override
@@ -22,8 +23,7 @@ class MyApp extends StatelessWidget {
         home: const MainAppWidget(),
         theme: ThemeData(
           brightness: Brightness.dark,
-          primaryColor: Colors.blue,
-          primarySwatch: Colors.pink,
+          primarySwatch: accentColor,
         ));
   }
 }
@@ -40,6 +40,7 @@ class MainAppWidget extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: 0,
           bottom: const TabBar(
+            indicatorColor: Colors.pink,
             tabs: <Widget>[
               Tab(
                 icon: Text('Setup'),
@@ -503,7 +504,6 @@ class Counter extends StatefulWidget {
 }
 
 class _CounterState extends State<Counter> {
-  var count = global.count;
   var makes = global.makes;
   var stackSize = global.stackSize;
   @override
@@ -516,17 +516,16 @@ class _CounterState extends State<Counter> {
               onLongPress: () {
                 final makesSnackBar = SnackBar(
                     content: Text(
-                        "${global.makes}/$count - Accuracy: ${((global.makes / count) * 100).truncate()}%"));
+                        "${global.makes}/${global.count} - Accuracy: ${((global.makes / global.count) * 100).truncate()}%"));
                 global.snackbarKey.currentState?.showSnackBar(makesSnackBar);
               },
               onTap: () => setState(() {
-                    if (count - stackSize <= 0) {
-                      count = 0;
+                    if (global.count - stackSize <= 0) {
+                      global.count = 0;
                     } else {
-                      count = count - stackSize;
+                      global.count = global.count - stackSize;
                     }
-                    global.count = count;
-                    if (count >= global.goal) {
+                    if (global.count >= global.goal) {
                       global.backgroundColor = global.green;
                     } else {
                       global.backgroundColor = Colors.transparent;
@@ -542,7 +541,7 @@ class _CounterState extends State<Counter> {
               onLongPress: () {
                 final makesSnackBar = SnackBar(
                     content: Text(
-                        "${global.makes}/$count - Accuracy: ${(global.makes / count) * 100.round()}%"));
+                        "${global.makes}/${global.count} - Accuracy: ${(global.makes / global.count) * 100.round()}%"));
                 global.snackbarKey.currentState?.showSnackBar(makesSnackBar);
               },
               onTap: () => setState(() {
@@ -550,9 +549,8 @@ class _CounterState extends State<Counter> {
                         context,
                         CustomPageRoute(
                             builder: (context) => const ShotsMade()));
-                    count = count + stackSize;
-                    global.count = count;
-                    if (count >= global.goal) {
+                    global.count = global.count + stackSize;
+                    if (global.count >= global.goal) {
                       global.backgroundColor = global.green;
                     } else {
                       global.backgroundColor = Colors.transparent;
@@ -570,19 +568,29 @@ class _CounterState extends State<Counter> {
         Center(
             child: IgnorePointer(
                 child: Text(
-          "$count",
+          "${global.count}",
           textScaleFactor: 10,
         ))),
+// What's happening
+// When a new counter state is called, count is set to the global.count value
+// When the log session button is pressed, current count is set to the value of global.count
+// global.cout is then passed to the database
+// setState is then called to reset count to 0
+// if the user pressed undo on the snackbar, count will be set to the value of currentCount
+
+// so I have globalCount, currentCount, and count all in one class. I think I only need 2 different counts:
+// one to store the value as it is, and one to cache the value so that we can revert back to it if needed.
+
         ElevatedButton(
             child: const Text(
               "Log Session",
               textScaleFactor: 2,
             ),
             style: null,
-            onPressed: count == 0
+            onPressed: global.count == 0
                 ? null
                 : () async {
-                    final currentCount = count;
+                    final currentCount = global.count;
                     final currentMakes = global.makes;
                     int? i = await DataBaseHelper.instance.insert({
                       DataBaseHelper.columnName: global.name,
@@ -597,20 +605,22 @@ class _CounterState extends State<Counter> {
 
                     setState(() {
                       global.makes = 0;
-                      count = 0;
+                      global.count = 0;
                       global.backgroundColor = Colors.transparent;
                     });
                     final snackBar = SnackBar(
                         content: Text(
                             "Logged session $i to database:\n\nYou made $currentMakes of ${global.count} ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance} feet."),
+
+                        // Undo Session Log
                         action: SnackBarAction(
                           label: 'Undo',
                           onPressed: () async {
                             await DataBaseHelper.instance.delete(i);
                             setState(() {
-                              count = currentCount;
+                              global.count = currentCount;
                               global.makes = currentMakes;
-                              if (count >= global.goal) {
+                              if (global.count >= global.goal) {
                                 global.backgroundColor = global.green;
                               } else {
                                 global.backgroundColor = Colors.transparent;
@@ -622,6 +632,7 @@ class _CounterState extends State<Counter> {
                             global.snackbarKey.currentState
                                 ?.showSnackBar(deleteSnackBar);
                           },
+                          //
                         ));
                     global.snackbarKey.currentState?.showSnackBar(snackBar);
                   }),
