@@ -55,11 +55,9 @@ class MainAppWidget extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             Center(
-              // This calls the Putting Setup page code
               child: PuttingSetup(),
             ),
             Center(
-              // This is where the putting game code class will be called from
               child: PuttingCounter(),
             ),
           ],
