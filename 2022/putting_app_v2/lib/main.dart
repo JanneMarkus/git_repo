@@ -524,6 +524,7 @@ class _CounterState extends State<Counter> {
               },
               onTap: () => setState(() {
                     if (global.count - stackSize <= 0) {
+                      global.makes = 0;
                       global.count = 0;
                     } else {
                       global.count = global.count - stackSize;
