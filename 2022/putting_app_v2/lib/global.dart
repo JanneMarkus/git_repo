@@ -7,6 +7,7 @@ var makes = 0;
 var stackSize = 5;
 var distance = 15;
 var shotType = 1;
+var stance = '';
 var goal = 100;
 var date = "";
 var green = const Color.fromRGBO(152, 190, 100, 1);

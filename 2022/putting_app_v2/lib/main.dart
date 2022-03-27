@@ -76,21 +76,33 @@ class PuttingSetup extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _ChoiceChip(),
+        const Center(
+            child: Text(
+          "Stance",
+          textScaleFactor: 1.25,
+        )),
+        _StanceSelectorChip(),
         const Divider(),
-        const StackSizeSliders(),
+        const Center(
+            child: Text(
+          "Shot Type",
+          textScaleFactor: 1.25,
+        )),
+        _ShotTypeSelectorChip(),
+        const Divider(),
         const Center(
             child: Text(
           "# of Putters",
           textScaleFactor: 1.25,
         )),
+        const StackSizeSliders(),
         const Divider(),
-        const DistanceSliders(),
         const Center(
             child: Text(
           "Distance To Basket (ft)",
           textScaleFactor: 1.25,
-        ))
+        )),
+        const DistanceSliders(),
       ],
     );
   }
@@ -100,12 +112,13 @@ class PuttingSetup extends StatelessWidget {
 // This is where the code for the Choice Chips goes
 //
 
-class _ChoiceChip extends StatefulWidget {
+class _ShotTypeSelectorChip extends StatefulWidget {
   @override
-  _ChoiceChipState createState() => _ChoiceChipState();
+  _ShotTypeSelectorChipState createState() => _ShotTypeSelectorChipState();
 }
 
-class _ChoiceChipState extends State<_ChoiceChip> with RestorationMixin {
+class _ShotTypeSelectorChipState extends State<_ShotTypeSelectorChip>
+    with RestorationMixin {
   final RestorableInt _indexSelected = RestorableInt(global.shotType);
 
   @override
@@ -156,6 +169,102 @@ class _ChoiceChipState extends State<_ChoiceChip> with RestorationMixin {
               setState(() {
                 _indexSelected.value = value ? 2 : -1;
                 global.shotType = 2;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Stance Selector
+
+class _StanceSelectorChip extends StatefulWidget {
+  @override
+  _StanceSelectorChipState createState() => _StanceSelectorChipState();
+}
+
+class _StanceSelectorChipState extends State<_StanceSelectorChip>
+    with RestorationMixin {
+  final RestorableInt _indexSelected = RestorableInt(global.stance == "Normal"
+      ? 0
+      : (global.stance == "Straddle"
+          ? 1
+          : (global.stance == "Kneeling"
+              ? 2
+              : (global.stance == "Reaching Right" ? 3 : 4))));
+
+  @override
+  String get restorationId => 'choice_chip_demo';
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(_indexSelected, 'choice_chip');
+  }
+
+  @override
+  void dispose() {
+    _indexSelected.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Wrap(
+        children: [
+          ChoiceChip(
+            label: const Text("Normal"),
+            selected: _indexSelected.value == 0,
+            onSelected: (value) {
+              setState(() {
+                _indexSelected.value = value ? 0 : -1;
+                global.stance = "Normal";
+              });
+            },
+          ),
+          const SizedBox(width: 8),
+          ChoiceChip(
+            label: const Text("Straddle"),
+            selected: _indexSelected.value == 1,
+            onSelected: (value) {
+              setState(() {
+                _indexSelected.value = value ? 1 : -1;
+                global.stance = "Straddle";
+              });
+            },
+          ),
+          const SizedBox(width: 8),
+          ChoiceChip(
+            label: const Text("Kneeling"),
+            selected: _indexSelected.value == 2,
+            onSelected: (value) {
+              setState(() {
+                _indexSelected.value = value ? 2 : -1;
+                global.stance = "Kneeling";
+              });
+            },
+          ),
+          const SizedBox(width: 8),
+          ChoiceChip(
+            label: const Text("Reaching Right"),
+            selected: _indexSelected.value == 3,
+            onSelected: (value) {
+              setState(() {
+                _indexSelected.value = value ? 3 : -1;
+                global.stance = "Reaching Right";
+              });
+            },
+          ),
+          const SizedBox(width: 8),
+          ChoiceChip(
+            label: const Text("Reaching Left"),
+            selected: _indexSelected.value == 4,
+            onSelected: (value) {
+              setState(() {
+                _indexSelected.value = value ? 4 : -1;
+                global.stance = "Reaching Left";
               });
             },
           ),
@@ -482,7 +591,8 @@ class _CounterState extends State<Counter> {
                       DataBaseHelper.columnMakes: global.makes,
                       DataBaseHelper.columnShotType: global.shotType,
                       DataBaseHelper.columnDistance: global.distance,
-                      DataBaseHelper.columnStackSize: global.stackSize
+                      DataBaseHelper.columnStackSize: global.stackSize,
+                      DataBaseHelper.columnStance: global.stance,
                     });
 
                     setState(() {
