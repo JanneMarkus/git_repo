@@ -12,7 +12,7 @@ var goal = 100;
 var date = "";
 var green = const Color.fromRGBO(152, 190, 100, 1);
 var backgroundColor = Colors.transparent;
-var startTab = 1;
+var startTab = 0;
 var table = [];
 
 final GlobalKey<ScaffoldMessengerState> snackbarKey =
