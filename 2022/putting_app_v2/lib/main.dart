@@ -458,7 +458,8 @@ class _ShotsMadeState extends State<ShotsMade> {
                 height: (height) / 7,
                 child: GestureDetector(
                   onTap: () => {
-                    global.makes = global.makes + index,
+                    global.makes += index,
+                    global.previousMake = index,
                     print(global.makes),
                     Navigator.pop(context)
                   },
@@ -503,8 +504,10 @@ class Counter extends StatefulWidget {
   _CounterState createState() => _CounterState();
 }
 
+// add a cache feature for the makes so that when I press the back button, the previously
+// selected makes is subtracted from the makes count.
+
 class _CounterState extends State<Counter> {
-  var makes = global.makes;
   var stackSize = global.stackSize;
   @override
   Widget build(BuildContext context) {
@@ -524,6 +527,7 @@ class _CounterState extends State<Counter> {
                       global.count = 0;
                     } else {
                       global.count = global.count - stackSize;
+                      global.makes -= global.previousMake;
                     }
                     if (global.count >= global.goal) {
                       global.backgroundColor = global.green;
@@ -571,16 +575,6 @@ class _CounterState extends State<Counter> {
           "${global.count}",
           textScaleFactor: 10,
         ))),
-// What's happening
-// When a new counter state is called, count is set to the global.count value
-// When the log session button is pressed, current count is set to the value of global.count
-// global.cout is then passed to the database
-// setState is then called to reset count to 0
-// if the user pressed undo on the snackbar, count will be set to the value of currentCount
-
-// so I have globalCount, currentCount, and count all in one class. I think I only need 2 different counts:
-// one to store the value as it is, and one to cache the value so that we can revert back to it if needed.
-
         ElevatedButton(
             child: const Text(
               "Log Session",
@@ -610,7 +604,7 @@ class _CounterState extends State<Counter> {
                     });
                     final snackBar = SnackBar(
                         content: Text(
-                            "Logged session $i to database:\n\nYou made $currentMakes of ${global.count} ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance} feet."),
+                            "Logged session $i to database:\n\nYou made $currentMakes of $currentCount ${global.shotType == 0 ? "hyzer" : (global.shotType == 1 ? "flat" : "anhyzer")} throws from ${global.distance} feet."),
 
                         // Undo Session Log
                         action: SnackBarAction(

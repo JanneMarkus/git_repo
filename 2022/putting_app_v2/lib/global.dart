@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 var count = 0;
 var name = "Janne";
 var makes = 0;
+var previousMake = 0;
 var stackSize = 5;
 var distance = 15;
 var shotType = 1;
