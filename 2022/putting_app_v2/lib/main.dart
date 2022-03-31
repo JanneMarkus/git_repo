@@ -77,37 +77,88 @@ class PuttingSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        const Center(
-            child: Text(
-          "Stance",
-          textScaleFactor: 1.25,
-        )),
-        _StanceSelectorChip(),
-        const Divider(),
-        const Center(
-            child: Text(
-          "Shot Type",
-          textScaleFactor: 1.25,
-        )),
-        _ShotTypeSelectorChip(),
-        const Divider(),
-        const Center(
-            child: Text(
-          "# of Putters",
-          textScaleFactor: 1.25,
-        )),
-        const StackSizeSliders(),
-        const Divider(),
-        const Center(
-            child: Text(
-          "Distance To Basket (ft)",
-          textScaleFactor: 1.25,
-        )),
-        const DistanceSliders(),
-      ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        TextEditingController().clear();
+      },
+      child: ListView(
+        children: [
+          SizedBox(
+            height: 250,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Center(
+                      child: Text(
+                    "Stance",
+                    textScaleFactor: 1.25,
+                  )),
+                  _StanceSelectorChip()
+                ]),
+          ),
+          const Divider(),
+          SizedBox(
+            height: 200,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Center(
+                    child: Text(
+                  "Shot Type",
+                  textScaleFactor: 1.25,
+                )),
+                _ShotTypeSelectorChip(),
+              ],
+            ),
+          ),
+          const Divider(),
+          SizedBox(
+            height: 250,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                Center(
+                    child: Text(
+                  "# of Putters",
+                  textScaleFactor: 1.25,
+                )),
+                StackSizeSliders(),
+              ],
+            ),
+          ),
+          const Divider(),
+          SizedBox(
+            height: 250,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                Center(
+                    child: Text(
+                  "Distance To Basket (ft)",
+                  textScaleFactor: 1.25,
+                )),
+                DistanceSliders(),
+              ],
+            ),
+          ),
+          const Divider(),
+          Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: TextField(
+                  onChanged: (String value) {
+                    global.notes = value;
+                  },
+                  decoration: InputDecoration(hintText: "Any notes?"),
+                  maxLines: null,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
