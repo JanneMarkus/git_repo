@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'database_helper.dart';
 
-// I need to make the settings into a listview first.
+// I need to make the settings into a listview first
 // Then I can add a widget that is just a textfield
 // Then I need to add a notes section to the database
 // Then I need to save the notes textfield when I log the session
@@ -144,21 +144,52 @@ class PuttingSetup extends StatelessWidget {
           ),
           const Divider(),
           Column(
-            children: [
+            children: const [
               Padding(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: TextField(
-                  onChanged: (String value) {
-                    global.notes = value;
-                  },
-                  decoration: InputDecoration(hintText: "Any notes?"),
-                  maxLines: null,
-                ),
+                child: NotesField(),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+}
+
+class NotesField extends StatefulWidget {
+  const NotesField({Key? key}) : super(key: key);
+
+  @override
+  State<NotesField> createState() => _NotesFieldState();
+}
+
+class _NotesFieldState extends State<NotesField> {
+  TextEditingController notesController = TextEditingController();
+
+  @override
+  // ignore: must_call_super
+  void initState() {
+    if (global.notes != "") {
+      notesController = TextEditingController(text: global.notes);
+    }
+  }
+
+  @override
+  void dispose() {
+    notesController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: notesController,
+      onChanged: (String value) {
+        global.notes = value;
+      },
+      decoration: const InputDecoration(hintText: "Any notes?"),
+      maxLines: null,
     );
   }
 }
@@ -641,6 +672,7 @@ class _CounterState extends State<Counter> {
                 : () async {
                     final currentCount = global.count;
                     final currentMakes = global.makes;
+                    final currentNotes = global.notes;
                     int? i = await DataBaseHelper.instance.insert({
                       DataBaseHelper.columnName: global.name,
                       DataBaseHelper.columnDate: DateTime.now().toString(),
@@ -650,11 +682,13 @@ class _CounterState extends State<Counter> {
                       DataBaseHelper.columnDistance: global.distance,
                       DataBaseHelper.columnStackSize: global.stackSize,
                       DataBaseHelper.columnStance: global.stance,
+                      DataBaseHelper.columnNotes: global.notes,
                     });
 
                     setState(() {
                       global.makes = 0;
                       global.count = 0;
+                      global.notes = "";
                       global.backgroundColor = Colors.transparent;
                     });
                     final snackBar = SnackBar(
@@ -669,6 +703,7 @@ class _CounterState extends State<Counter> {
                             setState(() {
                               global.count = currentCount;
                               global.makes = currentMakes;
+                              global.notes = currentNotes;
                               if (global.count >= global.goal) {
                                 global.backgroundColor = global.green;
                               } else {
