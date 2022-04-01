@@ -18,7 +18,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
-  static const _dbName = "addedStance.db";
+  static const _dbName = "version3.db";
   static const _dbVersion = 2;
   static const _tableName = "myTable";
 
@@ -31,6 +31,7 @@ class DataBaseHelper {
   static const columnMakes = 'makes';
   static const columnStackSize = 'stackSize';
   static const columnStance = 'stance';
+  static const columnNotes = 'notes';
 
   // Making it a singleton class
   DataBaseHelper._privateConstructor();
@@ -62,7 +63,8 @@ class DataBaseHelper {
     $columnThrows INTEGER,
     $columnMakes INTEGER,
     $columnStackSize INTEGER,
-    $columnStance TEXT)
+    $columnStance TEXT,
+    $columnNotes TEXT)
     ''');
 
   Future<int> insert(Map<String, dynamic> row) async {
