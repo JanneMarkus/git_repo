@@ -5,11 +5,6 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'database_helper.dart';
 
-// I need to make the settings into a listview first
-// Then I can add a widget that is just a textfield
-// Then I need to add a notes section to the database
-// Then I need to save the notes textfield when I log the session
-
 void main() async {
   runApp(const MyApp());
 }
