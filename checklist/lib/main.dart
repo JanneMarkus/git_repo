@@ -181,6 +181,7 @@ class _ChecklistState extends State<Checklist> {
     return Scaffold(
       appBar: AppBar(title: const Text('Pre-flight Physical Checklist')),
       body: ListView.builder(
+        cacheExtent: 9999,
         itemBuilder: (context, int index) =>
             CheckItemWidget(text: widget.checkItems[index]),
         itemCount: widget.checkItems.length,
