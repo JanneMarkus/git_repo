@@ -34,8 +34,10 @@ class ChecklistApp extends StatelessWidget {
 }
 
 class CheckItemWidget extends StatefulWidget {
-  const CheckItemWidget({Key? key, required this.text}) : super(key: key);
+  const CheckItemWidget({Key? key, required this.text, required this.index})
+      : super(key: key);
   final String text;
+  final int index;
   @override
   State<CheckItemWidget> createState() => _CheckItemWidgetState();
 }
@@ -49,6 +51,7 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
     if (widget.text == 'All propeller bolt alignment marks have not moved') {
       return ListTile(
           title: Text(widget.text),
+          leading: Text('${widget.index + 1}.'),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -82,6 +85,7 @@ class _CheckItemWidgetState extends State<CheckItemWidget> {
     } else {
       return ListTile(
           title: Text(widget.text),
+          leading: Text('${widget.index + 1}.'),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -214,6 +218,7 @@ class Checklist extends StatefulWidget {
   ];
   Checklist({Key? key}) : super(key: key);
   int groupIndex = 0;
+  int groupItemIndex = 0;
   @override
   State<Checklist> createState() => _ChecklistState();
 }
@@ -234,20 +239,29 @@ class _ChecklistState extends State<Checklist> {
               index == 16 ||
               index == 19 ||
               index == 20) {
+            widget.groupItemIndex = 0;
             widget.groupIndex++;
             if (widget.groupIndex <= widget.checkGroups.length) {
+              widget.groupItemIndex++;
               return Column(children: [
                 const Divider(),
                 GroupHeading(
-                  title: widget.checkGroups[widget.groupIndex - 1]['title'],
+                  title: widget.groupIndex.toString() +
+                      '. ' +
+                      widget.checkGroups[widget.groupIndex - 1]['title'],
                   description: widget.checkGroups[widget.groupIndex - 1]
                       ['description'],
                 ),
-                CheckItemWidget(text: widget.checkItems[index])
+                CheckItemWidget(
+                    text: widget.checkItems[index],
+                    index: widget.groupItemIndex - 1)
               ]);
             }
           } else {
-            return CheckItemWidget(text: widget.checkItems[index]);
+            widget.groupItemIndex++;
+            return CheckItemWidget(
+                text: widget.checkItems[index],
+                index: widget.groupItemIndex - 1);
           }
           return const Text("Error");
         },
