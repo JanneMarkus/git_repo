@@ -1,17 +1,3 @@
-// Add grouping feature to the checklist items.
-// Add number to each item. The number begins at 1 for the first item in a group
-// Each group has a Title and a description.
-// I can make a list of 10 items where each item is a group. Then each group item contains a list of the check that are in that group.
-// Then I can display the groups as a list view, and in each item of the list view I can have the group number as the leading, the title, the description.
-// I would display the group title and such on the init of the group, then I would return the list tiles on all remaining runs.
-
-// I could also add metadata to each item in the checklist which tells which group it's in and which item it is.
-// Then I just do separate listView widgets for each group.
-
-// Add feature that opens the camera on selfie mode when you press the icon on the prop bolts checklist item.
-// I could pass a "Special feature" field for each list item. The item that needs the camera to open could have the function for that, and the items that are followed by a different group could have the group header constructor passed in.
-// fields with no special features just pass null.
-
 import 'package:flutter/material.dart';
 
 main() {
