@@ -210,49 +210,73 @@ class Checklist extends StatefulWidget {
 }
 
 class _ChecklistState extends State<Checklist> {
+  submitList() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: const Text("Uh oh!"),
+              content: const Text(
+                  "There are one or more items that failed the checks."),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context, "OK"),
+                    child: const Text('OK'))
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pre-flight Physical Checklist')),
+      appBar:
+          AppBar(title: const Text('Pre-flight Physical Checklist'), actions: [
+        IconButton(
+          onPressed: () => submitList(),
+          icon: const Icon(Icons.send),
+          tooltip: 'Submit the list and check for errors',
+        )
+      ]),
       body: ListView.builder(
-        cacheExtent: 9999,
-        itemBuilder: (context, int index) {
-          if (index == 0 ||
-              index == 2 ||
-              index == 3 ||
-              index == 7 ||
-              index == 11 ||
-              index == 16 ||
-              index == 19 ||
-              index == 20) {
-            widget.groupItemIndex = 0;
-            widget.groupIndex++;
-            if (widget.groupIndex <= widget.checkGroups.length) {
-              widget.groupItemIndex++;
-              return Column(children: [
-                const Divider(),
-                GroupHeading(
-                  title: widget.groupIndex.toString() +
-                      '. ' +
-                      widget.checkGroups[widget.groupIndex - 1]['title'],
-                  description: widget.checkGroups[widget.groupIndex - 1]
-                      ['description'],
-                ),
-                CheckItemWidget(
-                    text: widget.checkItems[index],
-                    index: widget.groupItemIndex - 1)
-              ]);
+          cacheExtent: 9999,
+          itemBuilder: (context, int index) {
+            if (index > widget.checkItems.length) {
+              const Spacer(flex: 1000);
             }
-          } else {
-            widget.groupItemIndex++;
-            return CheckItemWidget(
-                text: widget.checkItems[index],
-                index: widget.groupItemIndex - 1);
-          }
-          return const Text("Error");
-        },
-        itemCount: widget.checkItems.length,
-      ),
+            if (index == 0 ||
+                index == 2 ||
+                index == 3 ||
+                index == 7 ||
+                index == 11 ||
+                index == 16 ||
+                index == 19 ||
+                index == 20) {
+              widget.groupItemIndex = 0;
+              widget.groupIndex++;
+              if (widget.groupIndex <= widget.checkGroups.length) {
+                widget.groupItemIndex++;
+                return Column(children: [
+                  const Divider(),
+                  GroupHeading(
+                    title: widget.groupIndex.toString() +
+                        '. ' +
+                        widget.checkGroups[widget.groupIndex - 1]['title'],
+                    description: widget.checkGroups[widget.groupIndex - 1]
+                        ['description'],
+                  ),
+                  CheckItemWidget(
+                      text: widget.checkItems[index],
+                      index: widget.groupItemIndex - 1)
+                ]);
+              }
+            } else {
+              widget.groupItemIndex++;
+              return CheckItemWidget(
+                  text: widget.checkItems[index],
+                  index: widget.groupItemIndex - 1);
+            }
+            return const Text("Error");
+          },
+          itemCount: widget.checkItems.length),
     );
   }
 }
