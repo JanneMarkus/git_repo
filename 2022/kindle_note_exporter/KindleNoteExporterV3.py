@@ -14,7 +14,7 @@ except:
 	quit()
 
 #finds the save.txt file
-path = 'kindleNoteExporter\save.txt'
+path = 'kindle_note_exporter\save.txt'
 save = open(path, 'r+')
 
 #Ask where to start
